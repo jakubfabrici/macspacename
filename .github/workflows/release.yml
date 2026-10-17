@@ -1,8 +1,20 @@
 name: Release
 
+# Two ways to publish:
+#   1. push a tag:              git tag v0.1.0 && git push origin v0.1.0
+#   2. run this workflow by hand (Actions → Release → Run workflow) with a version such as 0.1.0-beta.1;
+#      the workflow then creates the tag on the chosen branch itself.
+# Versions containing a hyphen (0.1.0-beta.1) are published as pre-releases.
+
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, without the leading v (e.g. 0.1.0-beta.1)"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -16,11 +28,27 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+          VERSION="${VERSION#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          case "$VERSION" in
+            *-*) echo "prerelease=true" >> "$GITHUB_OUTPUT" ;;
+            *)   echo "prerelease=false" >> "$GITHUB_OUTPUT" ;;
+          esac
+          echo "Releasing $VERSION"
+
       - name: Test
         run: swift test
 
       - name: Bundle, zip and DMG
-        run: make zip dmg
+        run: make zip dmg VERSION="${{ steps.version.outputs.version }}"
 
       - name: Checksum
         run: |
@@ -30,11 +58,14 @@ jobs:
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.version.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          name: MacSpaceName ${{ steps.version.outputs.version }}
           files: |
             dist/*.dmg
             dist/*.zip
             dist/SHA256SUMS.txt
-          prerelease: ${{ contains(github.ref_name, '-') }}
+          prerelease: ${{ steps.version.outputs.prerelease == 'true' }}
           generate_release_notes: true
           body: |
             ## Install
