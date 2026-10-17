@@ -1,7 +1,7 @@
 # MacSpaceName — build helpers.
 #
 #   make build     compile a release binary (current architecture only)
-#   make bundle    build a universal MacSpaceName.app into dist/
+#   make bundle    build a universal MacSpaceName.app into dist/ (ARCHS=arm64 for one arch)
 #   make run       bundle + launch
 #   make install   bundle + copy into /Applications
 #   make test      run the unit tests
@@ -11,7 +11,9 @@
 APP        := MacSpaceName
 DIST       := dist
 APP_DIR    := $(DIST)/$(APP).app
-ARCHS      ?= --arch arm64 --arch x86_64
+# Architectures of the universal binary. Each one is built with its own --triple
+# (the native SwiftPM build system), then merged with lipo. Set ARCHS=arm64 for a quick single-arch build.
+ARCHS      ?= arm64 x86_64
 VERSION    ?= $(shell git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')
 BUILD      ?= $(shell git rev-list --count HEAD 2>/dev/null)
 
@@ -31,11 +33,19 @@ test:
 	swift test
 
 bundle:
-	swift build -c release $(ARCHS)
-	$(eval BIN_DIR := $(shell swift build -c release $(ARCHS) --show-bin-path))
+	@for arch in $(ARCHS); do \
+		echo "==> Building $$arch"; \
+		swift build -c release --triple $$arch-apple-macosx || exit 1; \
+	done
 	rm -rf "$(APP_DIR)"
 	mkdir -p "$(APP_DIR)/Contents/MacOS" "$(APP_DIR)/Contents/Resources"
-	cp "$(BIN_DIR)/$(APP)" "$(APP_DIR)/Contents/MacOS/$(APP)"
+	@binaries=""; \
+	for arch in $(ARCHS); do \
+		bin="$$(swift build -c release --triple $$arch-apple-macosx --show-bin-path)/$(APP)"; \
+		binaries="$$binaries $$bin"; \
+	done; \
+	echo "==> lipo $$binaries"; \
+	lipo -create -output "$(APP_DIR)/Contents/MacOS/$(APP)" $$binaries
 	sed -e 's/__VERSION__/$(VERSION)/' -e 's/__BUILD__/$(BUILD)/' Resources/Info.plist > "$(APP_DIR)/Contents/Info.plist"
 	printf 'APPL????' > "$(APP_DIR)/Contents/PkgInfo"
 	# Ad-hoc signature: required on Apple silicon and keeps the Accessibility grant stable.
