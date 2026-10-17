@@ -41,12 +41,13 @@ Názvy prežijú reštart (sú viazané na stabilné UUID plochy). Aplikácia fu
 
 ### Stiahnutie
 
-1. Stiahni `MacSpaceName-<verzia>.zip` zo stránky [Releases](https://github.com/jakubfabrici/macspacename/releases).
-2. Rozbaľ a presuň `MacSpaceName.app` do `/Applications`.
-3. Aplikácia nie je notarizovaná (je podpísaná ad hoc). Pri prvom spustení klikni pravým → **Otvoriť**, alebo spusti:
+1. Stiahni `MacSpaceName-<verzia>.dmg` zo stránky [Releases](https://github.com/jakubfabrici/macspacename/releases) (je tam aj `.zip`).
+2. Otvor obraz a pretiahni **MacSpaceName** do **Applications**.
+3. Aplikácia je podpísaná ad hoc, nie notarizovaná, takže macOS prvé spustenie zablokuje. Buď spusti
    ```sh
-   xattr -d com.apple.quarantine /Applications/MacSpaceName.app
+   xattr -dr com.apple.quarantine /Applications/MacSpaceName.app
    ```
+   alebo ju skús raz otvoriť a potom v *Systémové nastavenia → Súkromie a bezpečnosť* klikni **Aj tak otvoriť** (na macOS 14 a starších funguje aj pravý klik → **Otvoriť**).
 4. Spusti ju. Žije iba v menu bare (nemá ikonu v Docku).
 
 ### Zostavenie zo zdrojákov
@@ -59,7 +60,7 @@ cd macspacename
 make install        # zostaví univerzálnu MacSpaceName.app a skopíruje ju do /Applications
 ```
 
-Ďalšie ciele: `make bundle` (iba zostaviť do `dist/`), `make run`, `make test`, `make zip`, `make clean`. Priečinok môžeš otvoriť aj v Xcode (`xed .`) a spustiť schému `MacSpaceName`.
+Ďalšie ciele: `make bundle` (iba zostaviť do `dist/`), `make run`, `make test`, `make zip`, `make dmg`, `make clean`. Priečinok môžeš otvoriť aj v Xcode (`xed .`) a spustiť schému `MacSpaceName`.
 
 ## Prvé spustenie
 

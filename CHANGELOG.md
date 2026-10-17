@@ -2,7 +2,9 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.1.0-beta.1] - 2026-10-17
+
+First public pre-release. Built and unit-tested on CI; UI features still need real-world testing — please report what misbehaves.
 
 ### Added
 - Names, icons and colors for Spaces, shown in the menu bar, menu, Quick Switcher and spaces bar.

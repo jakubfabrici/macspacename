@@ -33,4 +33,4 @@ Requirements: macOS 13+, Xcode 15+ (Swift 5.9). There is no Xcode project; `Pack
 
 ## Releasing
 
-Tag a commit `vX.Y.Z` and push the tag. The Release workflow builds a universal `.app`, zips it, computes a SHA-256 and publishes a GitHub release with auto-generated notes.
+Tag a commit `vX.Y.Z` (or `vX.Y.Z-beta.N` for a pre-release) and push the tag. The Release workflow runs the tests, builds a universal `.app`, packages it as `.dmg` and `.zip`, computes SHA-256 sums and publishes a GitHub release with auto-generated notes.

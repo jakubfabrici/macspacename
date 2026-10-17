@@ -2,8 +2,9 @@ name: CI
 
 on:
   push:
-    branches: ["**"]
+    branches: [main]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -36,11 +37,13 @@ jobs:
           plutil -lint dist/MacSpaceName.app/Contents/Info.plist
           codesign --verify --verbose dist/MacSpaceName.app
 
-      - name: Zip
-        run: make zip
+      - name: Zip and DMG
+        run: make zip dmg
 
       - uses: actions/upload-artifact@v4
         with:
           name: MacSpaceName-app
-          path: dist/*.zip
+          path: |
+            dist/*.zip
+            dist/*.dmg
           if-no-files-found: error

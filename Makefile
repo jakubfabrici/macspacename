@@ -6,6 +6,7 @@
 #   make install   bundle + copy into /Applications
 #   make test      run the unit tests
 #   make zip       bundle + create dist/MacSpaceName-<version>.zip
+#   make dmg       bundle + create dist/MacSpaceName-<version>.dmg (drag-to-Applications image)
 #   make clean     remove build products
 
 APP        := MacSpaceName
@@ -24,7 +25,7 @@ ifeq ($(BUILD),)
 BUILD := 1
 endif
 
-.PHONY: build bundle run install uninstall test zip clean
+.PHONY: build bundle run install uninstall test zip dmg clean
 
 build:
 	swift build -c release
@@ -66,6 +67,15 @@ uninstall:
 zip: bundle
 	cd "$(DIST)" && rm -f "$(APP)-$(VERSION).zip" && ditto -c -k --keepParent "$(APP).app" "$(APP)-$(VERSION).zip"
 	@echo "Created $(DIST)/$(APP)-$(VERSION).zip"
+
+dmg: bundle
+	rm -rf "$(DIST)/dmg-root" "$(DIST)/$(APP)-$(VERSION).dmg"
+	mkdir -p "$(DIST)/dmg-root"
+	cp -R "$(APP_DIR)" "$(DIST)/dmg-root/"
+	ln -s /Applications "$(DIST)/dmg-root/Applications"
+	hdiutil create -volname "$(APP)" -srcfolder "$(DIST)/dmg-root" -ov -format UDZO "$(DIST)/$(APP)-$(VERSION).dmg"
+	rm -rf "$(DIST)/dmg-root"
+	@echo "Created $(DIST)/$(APP)-$(VERSION).dmg"
 
 clean:
 	rm -rf .build "$(DIST)"

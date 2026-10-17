@@ -49,12 +49,13 @@ Names persist across restarts (they are keyed by the Space's stable UUID). Works
 
 ### Download
 
-1. Grab `MacSpaceName-<version>.zip` from the [Releases](https://github.com/jakubfabrici/macspacename/releases) page.
-2. Unzip and move `MacSpaceName.app` to `/Applications`.
-3. The app is not notarized (it is signed ad hoc). The first time, right-click → **Open**, or run:
+1. Grab `MacSpaceName-<version>.dmg` from the [Releases](https://github.com/jakubfabrici/macspacename/releases) page (a `.zip` is there too).
+2. Open the image and drag **MacSpaceName** to **Applications**.
+3. The app is signed ad hoc, not notarized, so macOS blocks the first launch. Either run
    ```sh
-   xattr -d com.apple.quarantine /Applications/MacSpaceName.app
+   xattr -dr com.apple.quarantine /Applications/MacSpaceName.app
    ```
+   or try to open it once, then go to *System Settings → Privacy & Security* and click **Open Anyway** (on macOS 14 and older, right-click → **Open** also works).
 4. Launch it. It lives in the menu bar only (no Dock icon).
 
 ### Build from source
@@ -67,7 +68,7 @@ cd macspacename
 make install        # builds a universal MacSpaceName.app and copies it to /Applications
 ```
 
-Other targets: `make bundle` (just build into `dist/`), `make run`, `make test`, `make zip`, `make clean`. You can also open the folder in Xcode (`xed .`) and run the `MacSpaceName` scheme.
+Other targets: `make bundle` (just build into `dist/`), `make run`, `make test`, `make zip`, `make dmg`, `make clean`. You can also open the folder in Xcode (`xed .`) and run the `MacSpaceName` scheme.
 
 ## First run
 
