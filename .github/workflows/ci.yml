@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & test (macOS)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Toolchain
+        run: |
+          sw_vers
+          xcodebuild -version
+          swift --version
+
+      - name: Build (debug)
+        run: swift build -v
+
+      - name: Test
+        run: swift test
+
+      - name: Bundle universal app
+        run: make bundle
+
+      - name: Verify bundle
+        run: |
+          ls -la dist/MacSpaceName.app/Contents/MacOS
+          lipo -info dist/MacSpaceName.app/Contents/MacOS/MacSpaceName
+          plutil -lint dist/MacSpaceName.app/Contents/Info.plist
+          codesign --verify --verbose dist/MacSpaceName.app
+
+      - name: Zip and DMG
+        run: make zip dmg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MacSpaceName-app
+          path: |
+            dist/*.zip
+            dist/*.dmg
+          if-no-files-found: error
