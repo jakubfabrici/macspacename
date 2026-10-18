@@ -191,6 +191,10 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         settingsItem.target = self
         menu.addItem(settingsItem)
 
+        let updates = NSMenuItem(title: "Check for Updates…", action: #selector(checkForUpdates), keyEquivalent: "")
+        updates.target = self
+        menu.addItem(updates)
+
         let about = NSMenuItem(title: "About MacSpaceName", action: #selector(openAbout), keyEquivalent: "")
         about.target = self
         menu.addItem(about)
@@ -348,5 +352,9 @@ final class StatusItemController: NSObject, NSMenuDelegate {
 
     @objc private func openAbout() {
         app.settings.show(tab: .about)
+    }
+
+    @objc private func checkForUpdates() {
+        app.updater.check(userInitiated: true)
     }
 }

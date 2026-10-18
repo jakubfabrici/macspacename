@@ -75,7 +75,7 @@ struct SpaceSettingsRow: View {
                 }
             }
             HStack(spacing: 12) {
-                KeyboardShortcuts.Recorder("Shortcut:", name: .space(space.key))
+                ShortcutRecorder("Shortcut:", name: .space(space.key))
                 Picker("On enter:", selection: config.spaceBinding(space.key, \.onEnterGroupID)) {
                     Text("Nothing").tag(UUID?.none)
                     ForEach(config.config.actionGroups) { group in

@@ -18,6 +18,7 @@ final class AppContainer {
     let missionControl: MissionControlLabelController
     let windowMover: WindowMover
     let urlHandler: URLCommandHandler
+    let updater: UpdateChecker
 
     init() {
         let config = ConfigStore(fileURL: ConfigStore.defaultFileURL())
@@ -30,6 +31,7 @@ final class AppContainer {
 
         tracker = TimeTracker(fileURL: TimeTracker.defaultFileURL(), config: config, spaces: spaces)
         actions = ActionRunner()
+        updater = UpdateChecker(config: config)
         windowMover = WindowMover(spaces: spaces)
 
         statusItem = StatusItemController()
@@ -60,6 +62,7 @@ final class AppContainer {
         tracker.start()
         spacesBar.start()
         missionControl.start()
+        updater.start()
 
         spaces.onActiveSpaceChanged = { [weak self] previous, current in
             self?.activeSpaceDidChange(from: previous, to: current)

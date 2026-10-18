@@ -21,6 +21,7 @@ Requirements: macOS 13+, Xcode 15+ (Swift 5.9). There is no Xcode project; `Pack
 
 * Keep private API usage inside `Sources/MacSpaceName/System/PrivateAPI.swift` and resolve symbols with `dlsym`, so a missing symbol degrades the feature instead of crashing the app.
 * Logic that does not need AppKit goes into `MacSpaceNameCore` with a unit test.
+* `make bundle` copies only the executable into the `.app`; SwiftPM resource bundles are not packaged (a bundle in the `.app` root would break code signing). Do not call dependency APIs that load `Bundle.module` — for KeyboardShortcuts that means using `ShortcutRecorder` / `ShortcutFormatter` instead of its `Recorder` or `Shortcut.description`. The CI smoke test opens every Settings tab to catch this.
 * New persisted fields must decode with a default (`decodeIfPresent`) so existing `config.json` files keep working.
 * Match the existing style: small files, one responsibility each, `@MainActor` app classes, no Combine chains where a selector will do.
 * Document user-facing changes in `CHANGELOG.md` and, if relevant, `docs/features.md`.

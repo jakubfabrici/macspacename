@@ -37,6 +37,16 @@ jobs:
           plutil -lint dist/MacSpaceName.app/Contents/Info.plist
           codesign --verify --verbose dist/MacSpaceName.app
 
+      - name: Smoke test (launch, open every Settings tab)
+        # Move the build folder away first: SwiftPM's resource lookup falls back to absolute build
+        # paths, which exist on this runner but never on a user's Mac.
+        run: |
+          mv .build .build-away
+          status=0
+          scripts/smoke-test.sh dist/MacSpaceName.app || status=$?
+          mv .build-away .build
+          exit $status
+
       - name: Zip and DMG
         run: make zip dmg
 

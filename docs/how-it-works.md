@@ -127,13 +127,21 @@ Source: `Sources/MacSpaceName/Features/TimeTracker.swift`
 
 Every change of active space or frontmost app closes the current `TimeEntry` and opens a new one. A 15-second timer extends the live entry and checks `CGEventSource.secondsSinceLastEventType` for keyboard/mouse activity. When the idle time passes the threshold (default 5 min) the live entry is cut back to the last input and tracking pauses until you are back. Entries are appended to `timelog.json` (pretty-printed JSON) and summed on demand; the CSV export is RFC 4180-style.
 
-## 8. Data files
+## 8. Auto-update
+
+Source: `Sources/MacSpaceName/Features/UpdateChecker.swift`, `Sources/MacSpaceNameCore/UpdateFeed.swift`, `SemanticVersion.swift`
+
+There is no Sparkle and no update server. The app talks to the public GitHub Releases API (`/repos/jakubfabrici/macspacename/releases`), parses the tags as semantic versions and compares them with `CFBundleShortVersionString`. To install, it downloads the release's `.zip` and `SHA256SUMS.txt`, verifies the digest with CryptoKit, extracts the archive with `ditto -x -k`, checks that the bundle identifier matches, moves the running bundle into a temporary "item replacement" folder, moves the new bundle to the original path and spawns `sh -c 'while kill -0 <pid>; do sleep 0.2; done; open <path>'` before terminating. Files the app downloads itself carry no quarantine flag, so Gatekeeper does not interfere with the relaunch.
+
+Caveat: builds are ad-hoc signed, so every update has a different code signature. The Accessibility grant in System Settings is tied to that signature; after an update macOS may require you to re-enable MacSpaceName in *Privacy & Security → Accessibility*. A stable, Developer-ID-signed build would avoid this.
+
+## 9. Data files
 
 | File | Contents |
 |---|---|
 | `~/Library/Application Support/MacSpaceName/config.json` | names, icons, colors, notes, checklists, action groups, settings |
 | `~/Library/Application Support/MacSpaceName/timelog.json` | time-tracking entries |
-| `UserDefaults` (`io.github.jakubfabrici.MacSpaceName`) | keyboard shortcuts (managed by KeyboardShortcuts) |
+| `UserDefaults` (`io.github.jakubfabrici.MacSpaceName`) | keyboard shortcuts (managed by KeyboardShortcuts), last update check, skipped version |
 
 Both JSON files are written atomically and decoded leniently (missing keys fall back to defaults), so upgrading never loses data.
 

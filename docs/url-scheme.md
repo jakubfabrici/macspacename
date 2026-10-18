@@ -22,6 +22,7 @@ Names are matched case- and accent-insensitively; if there is no exact match the
 | `macspacename://switcher/move` | open it in *move window* mode |
 | `macspacename://notes` | open notes for the current Space |
 | `macspacename://settings` | open Settings |
+| `macspacename://settings/spaces` | open Settings on a tab: `general`, `spaces`, `shortcuts`, `actions`, `time`, `about` |
 | `macspacename://tracking/pause` · `/resume` · `/toggle` · `/export` · `/show` | control time tracking |
 | `macspacename://run?group=Meetings` or `macspacename://run/Meetings` | run an action group |
 
