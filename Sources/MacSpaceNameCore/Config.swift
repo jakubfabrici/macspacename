@@ -154,12 +154,16 @@ public struct AppSettings: Codable, Hashable {
     public var timeTracking: Bool = true
     public var idleMinutes: Int = 5
     public var showFullscreenSpaces: Bool = true
+    /// Check GitHub Releases for a newer version once a day.
+    public var automaticUpdates: Bool = true
+    /// Offer pre-releases (beta builds) as updates.
+    public var includePrereleases: Bool = true
 
     public init() {}
 
     enum CodingKeys: String, CodingKey {
         case menuBarStyle, showNumbersInMenu, switchMethod, missionControlLabels, hoverBar, dragToMove,
-             timeTracking, idleMinutes, showFullscreenSpaces
+             timeTracking, idleMinutes, showFullscreenSpaces, automaticUpdates, includePrereleases
     }
 
     public init(from decoder: Decoder) throws {
@@ -174,6 +178,8 @@ public struct AppSettings: Codable, Hashable {
         timeTracking = try c.decodeIfPresent(Bool.self, forKey: .timeTracking) ?? defaults.timeTracking
         idleMinutes = try c.decodeIfPresent(Int.self, forKey: .idleMinutes) ?? defaults.idleMinutes
         showFullscreenSpaces = try c.decodeIfPresent(Bool.self, forKey: .showFullscreenSpaces) ?? defaults.showFullscreenSpaces
+        automaticUpdates = try c.decodeIfPresent(Bool.self, forKey: .automaticUpdates) ?? defaults.automaticUpdates
+        includePrereleases = try c.decodeIfPresent(Bool.self, forKey: .includePrereleases) ?? defaults.includePrereleases
     }
 }
 

@@ -31,6 +31,7 @@ Je to open-source verzia nápadov z komerčnej aplikácie [SpaceJump](https://ww
 | ▶️ | **Automatizácie „On Click“** | Skupiny akcií – otvoriť aplikácie, priečinky, URL, spustiť Apple Shortcut alebo shell príkaz – z menu baru alebo automaticky pri vstupe na plochu. |
 | ⏱️ | **Meranie času** | Automatické meranie podľa plochy a aplikácie s detekciou nečinnosti, pauza/pokračovanie, pomenované session a export do CSV. Všetko lokálne. |
 | 🖥️ | **Viac displejov** | Funguje s „Displeje majú samostatné plochy“ zapnutým aj vypnutým; plochy sú zoskupené podľa displeja a číslované zľava doprava ako v Mission Control. |
+| 🔄 | **Auto-update** *(navyše)* | Raz denne skontroluje GitHub Releases, stiahne nový build, overí SHA-256, vymení aplikáciu na mieste a reštartuje sa. Ručná kontrola je v menu. |
 | 🔗 | **URL schéma** *(navyše)* | `open "macspacename://switch?name=Práca"` zo Shortcuts, Raycastu, Alfredu, skriptov… |
 | 📦 | **Export / import** *(navyše)* | Celá konfigurácia je jeden JSON súbor, ktorý si zálohuješ alebo synchronizuješ. |
 | 🔁 | **Skratky ďalšia / predchádzajúca plocha** *(navyše)* | Cyklické prepínanie plôch na aktuálnom displeji. |
@@ -115,6 +116,10 @@ Meranie je predvolene zapnuté a úplne lokálne. Každá zmena plochy alebo pre
 | Plocha „X“ | skok priamo na danú plochu (Settings → Spaces) | — |
 
 V Quick Switcheri: `↑ ↓ / Tab` pohyb · `↩` prepnúť · `⇧ ↩` presunúť okno · `1–9` skok · `⌘ 1–9` skok aj počas písania · `Esc` zavrieť.
+
+### Aktualizácie
+
+Aplikácia raz denne skontroluje GitHub Releases (kedykoľvek aj cez menu → **Check for Updates…**). Ak existuje novšia verzia, zobrazí dialóg s poznámkami k vydaniu a tlačidlom **Install and Relaunch**: stiahne zip, overí ho oproti `SHA256SUMS.txt`, vymení bundle v `/Applications` a reštartuje sa. Automatické kontroly alebo pre-release verzie vypneš v *Settings → General → Updates*. Keďže buildy sú podpísané iba ad hoc, macOS si môže po aktualizácii znova vypýtať oprávnenie Prístupnosť (pozri [riešenie problémov](docs/troubleshooting.md)).
 
 ## Ako to funguje (v skratke)
 

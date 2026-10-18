@@ -71,6 +71,7 @@ final class SettingsWindowController {
             .environmentObject(app.config)
             .environmentObject(app.spaces)
             .environmentObject(app.tracker)
+            .environmentObject(app.updater)
             .environment(\.appActions, actions)
         return WindowFactory.make(title: "MacSpaceName Settings", size: NSSize(width: 640, height: 540), resizable: false, content: root)
     }

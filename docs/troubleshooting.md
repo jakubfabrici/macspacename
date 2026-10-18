@@ -30,6 +30,14 @@ The private `CGSCopyManagedDisplaySpaces` call could not be found. This happens 
 
 Hold `⇧` while the mouse button is down and move a little. The bar appears on the display the pointer is on. If `⇧` is used by the app you are dragging in (e.g. constrained drags in design tools), use *Move Front Window To* from the menu instead.
 
+### After an update, switching stopped working / Accessibility is asked for again
+
+Each build is ad-hoc signed, so macOS treats an updated MacSpaceName as a new app for the Accessibility permission. Open *System Settings → Privacy & Security → Accessibility*, remove MacSpaceName with the "−" button and add it again (or toggle it off and on). This is a one-time step per update.
+
+### "Check for Updates" says it cannot reach GitHub
+
+The check uses `https://api.github.com` without authentication (60 requests per hour per IP). Try again later, or download the release manually from the Releases page.
+
 ### Launch at login fails
 
 `SMAppService` only works for apps inside an `.app` bundle outside the build folder. Use `make install` (or move the app to `/Applications`) and try again.

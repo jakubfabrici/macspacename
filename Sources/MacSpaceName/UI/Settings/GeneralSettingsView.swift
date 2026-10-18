@@ -5,6 +5,7 @@ import MacSpaceNameCore
 struct GeneralSettingsView: View {
     @EnvironmentObject var config: ConfigStore
     @EnvironmentObject var spaces: SpaceService
+    @EnvironmentObject var updater: UpdateChecker
     @State private var launchAtLogin = LaunchAtLogin.isEnabled
     @State private var launchError: String?
     @State private var accessibilityTrusted = Accessibility.isTrusted
@@ -69,6 +70,22 @@ struct GeneralSettingsView: View {
                 Toggle("Drag to Move: hold ⇧ Shift while dragging a window to drop it on another space", isOn: config.binding(\.settings.dragToMove))
             }
 
+            Section("Updates") {
+                Toggle("Check for updates automatically (once a day)", isOn: config.binding(\.settings.automaticUpdates))
+                Toggle("Include pre-releases (beta builds)", isOn: config.binding(\.settings.includePrereleases))
+                HStack {
+                    Text(updateStatusText).font(.caption).foregroundStyle(.secondary)
+                    Spacer()
+                    Button("Check Now") { updater.check(userInitiated: true) }
+                        .disabled(updater.status == .checking || updater.status == .downloading || updater.status == .installing)
+                }
+                Text("Updates come from this project's GitHub Releases: the zip is downloaded, checked against SHA256SUMS.txt, "
+                     + "swapped in place and the app relaunches. Because builds are only ad-hoc signed, macOS may ask you to grant "
+                     + "Accessibility again after an update.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("Configuration file") {
                 HStack {
                     Button("Export…") { exportConfig() }
@@ -89,6 +106,24 @@ struct GeneralSettingsView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             accessibilityTrusted = Accessibility.isTrusted
             launchAtLogin = LaunchAtLogin.isEnabled
+        }
+    }
+
+    private var updateStatusText: String {
+        let version = "Version \(UpdateChecker.currentVersionString)."
+        switch updater.status {
+        case .idle:
+            if let last = updater.lastCheck {
+                let formatter = RelativeDateTimeFormatter()
+                return "\(version) Last checked \(formatter.localizedString(for: last, relativeTo: Date()))."
+            }
+            return "\(version) Not checked yet."
+        case .checking: return "\(version) Checking…"
+        case .upToDate: return "\(version) You're up to date."
+        case .available(let newVersion): return "\(version) Version \(newVersion) is available."
+        case .downloading: return "Downloading update…"
+        case .installing: return "Installing update…"
+        case .failed(let message): return "\(version) Last check failed: \(message)"
         }
     }
 

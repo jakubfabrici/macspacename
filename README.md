@@ -39,6 +39,7 @@ It is an open-source take on the ideas behind the commercial [SpaceJump](https:/
 | ▶️ | **On Click automations** | Groups of actions — open apps, folders, URLs, run Apple Shortcuts or shell commands — from the menu bar or automatically when you enter a Space. |
 | ⏱️ | **Time tracking** | Automatic per-Space and per-app timing with idle detection, pause/resume, named sessions and CSV export. All local. |
 | 🖥️ | **Multiple displays** | Works with "Displays have separate Spaces" on or off; Spaces are grouped per display and numbered left-to-right like Mission Control does. |
+| 🔄 | **Auto-update** *(extra)* | Checks GitHub Releases once a day, downloads the new build, verifies its SHA-256 checksum, swaps the app in place and relaunches. Manual check in the menu. |
 | 🔗 | **URL scheme** *(extra)* | `open "macspacename://switch?name=Work"` from Shortcuts, Raycast, Alfred, scripts… |
 | 📦 | **Export / import** *(extra)* | Everything lives in one JSON file you can back up or sync. |
 | 🔁 | **Next / previous Space shortcuts** *(extra)* | Cycle through Spaces on the current display. |
@@ -124,6 +125,10 @@ Tracking is on by default and fully local. Every change of Space or frontmost ap
 
 Inside the Quick Switcher: `↑ ↓ / Tab` navigate · `↩` switch · `⇧ ↩` move window · `1–9` jump · `⌘ 1–9` jump even while typing · `Esc` close.
 
+### Updates
+
+The app checks GitHub Releases once a day (menu → **Check for Updates…** at any time). When a newer version exists you get a dialog with the release notes and **Install and Relaunch**: the zip is downloaded, verified against `SHA256SUMS.txt`, the bundle in `/Applications` is replaced and the app relaunches. Turn automatic checks or pre-releases off in *Settings → General → Updates*. Because builds are only ad-hoc signed, macOS may ask you to grant Accessibility again after an update (see [troubleshooting](docs/troubleshooting.md)).
+
 ## How it works (short version)
 
 * **Reading Spaces** — the private `CGSCopyManagedDisplaySpaces` window-server call (the same one WhichSpace and Spaceman use) returns every display with its Spaces, their UUIDs and which one is current. The app re-reads it on space-change notifications, display changes, when `com.apple.spaces.plist` changes and every 5 s as a safety net.
@@ -151,6 +156,7 @@ Version 0.x. The code builds and its logic is unit-tested on GitHub's macOS runn
 | On Click automations (apps, folders, Shortcuts, scripts) | ✅ | ✅ |
 | Time tracking with idle detection & CSV | ✅ | ✅ |
 | Multi-display | ✅ | ✅ |
+| Auto-update | ✅ (GitHub Releases) | ✅ |
 | URL scheme for scripting | ✅ | ✗ |
 | Config export / import | ✅ | ✗ |
 | Requires SIP off / Dock injection | no | no |

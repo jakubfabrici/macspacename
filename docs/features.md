@@ -90,6 +90,14 @@ Run a group from the menu (*Run Actions ▸ ▶ name*), the *Run now* button, `m
 * With it **off**, all displays share one list, reported as display "Main".
 * Direct switching (*Switch to Desktop N*) works across displays; step switching is limited to the current display.
 
+## Auto-update
+
+* Once a day (first check a minute after launch) the app asks the GitHub Releases API for the newest version; pre-releases are included by default while the project is in beta (*Settings → General → Updates*).
+* A newer version shows a dialog with the release notes: **Install and Relaunch**, **Later**, **Skip This Version**, **View on GitHub**.
+* Installing downloads `MacSpaceName-<version>.zip`, verifies it against `SHA256SUMS.txt`, extracts it with `ditto`, checks the bundle identifier, moves the running bundle aside, puts the new one at the same path and relaunches once the old process has exited.
+* If the app is not running from a writable `.app` location (for example a `swift run` binary), the dialog simply opens the release page instead.
+* Menu → **Check for Updates…** runs a manual check and reports "up to date" or errors.
+
 ## URL scheme
 
 See [url-scheme.md](url-scheme.md).
@@ -117,6 +125,7 @@ Launch at login, menu bar style, numbers in lists, full-screen apps in lists, sw
 | External / multiple displays | ✅ | ✅ |
 | Works offline, no data collection | ✅ | ✅ |
 | No SIP change, no Dock injection | ✅ | ✅ |
+| Auto-update | ✅ | ✅ (GitHub Releases, checksum-verified) |
 | Homebrew install | ✅ | planned |
 | Next / previous Space shortcuts | ✗ | ✅ |
 | URL scheme for scripting | ✗ | ✅ |

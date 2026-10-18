@@ -8,6 +8,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Opening *Settings → Spaces* or *Settings → Shortcuts* crashed the app. The shortcut recorder of the KeyboardShortcuts library loads its localized strings from a SwiftPM resource bundle that the hand-built `.app` does not contain, so it hit a `fatalError`. MacSpaceName now has its own recorder that needs no resources.
 
 ### Added
+- Auto-update from GitHub Releases: daily check, release-notes dialog, checksum-verified in-place install and relaunch. *Check for Updates…* in the menu, settings for automatic checks and pre-releases. Users of 0.1.0-beta.1 need to download this version manually once.
 - `macspacename://settings/<tab>` opens Settings on a specific tab.
 - CI launches the bundled app and opens every Settings tab, failing on any crash.
 
