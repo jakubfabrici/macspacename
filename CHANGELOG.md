@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.0-beta.2] - 2026-10-18
+
+### Fixed
+- Opening *Settings → Spaces* or *Settings → Shortcuts* crashed the app. The shortcut recorder of the KeyboardShortcuts library loads its localized strings from a SwiftPM resource bundle that the hand-built `.app` does not contain, so it hit a `fatalError`. MacSpaceName now has its own recorder that needs no resources.
+
+### Added
+- `macspacename://settings/<tab>` opens Settings on a specific tab.
+- CI launches the bundled app and opens every Settings tab, failing on any crash.
+
 ## [0.1.0-beta.1] - 2026-10-17
 
 First public pre-release. Built and unit-tested on CI; UI features still need real-world testing — please report what misbehaves.
