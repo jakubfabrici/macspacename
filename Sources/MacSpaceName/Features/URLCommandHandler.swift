@@ -58,7 +58,7 @@ final class URLCommandHandler {
         case "notes":
             app.notes.show(spaceKey: spaces.activeSpace?.key)
         case "settings":
-            app.settings.show()
+            app.settings.show(tab: SettingsTab(rawValue: (argument ?? params["tab"] ?? "").lowercased()))
         case "tracking":
             switch (argument ?? params["action"] ?? "toggle").lowercased() {
             case "pause": app.tracker.isPaused = true

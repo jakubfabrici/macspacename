@@ -2,7 +2,8 @@ import AppKit
 import SwiftUI
 import MacSpaceNameCore
 
-enum SettingsTab: Hashable {
+/// Raw values are the names used by `macspacename://settings/<tab>`.
+enum SettingsTab: String, Hashable, CaseIterable {
     case general, spaces, shortcuts, actions, time, about
 }
 
